@@ -11,51 +11,44 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class POSTGAME2_API UNormalAIBehavior : public UActorComponent
 {
 	GENERATED_BODY()
-private:
-    float health;
-    float exp;
-    float damage;
 
 public:	
 	// Sets default values for this component's properties
 	UNormalAIBehavior();
 	
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-        //get float
-        float getDamage() {
-        return damage;
-    }
     UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    float getHealth() {
+        float health;
+
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        float exp;
+
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        float damage;
+    
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
+        float getHealth() {
         return health;
     }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    float getExp() {
+
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
+        float getExp() {
         return exp;
     }
 
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setHealth(float hp) {
-        hp = health;
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
+        float getDamage() {
+        return damage;
     }
 
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setDamage(float dmg) {
-        dmg = damage;
-    }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setExp(float EXP) {
-        EXP = exp;
-    }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setAI(float hp, float dmg, float EXP) {
-        dmg = damage;
-        hp = health;
-        EXP = exp;
+
+    void setAI() {
+        damage;
+        health;
+        exp;
     }
 
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    bool kill(bool) {
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
+    bool kill() {
         if (health == 0 || damage >= health) {
             return true;
         }
@@ -67,8 +60,8 @@ public:
         }
     }
 
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    bool hit(bool) {
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
+    bool hit() {
         if (true) {
             health = health - damage;
         }

@@ -2,65 +2,97 @@
 
 #pragma once
 
+#include <string>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "MainCharacter.generated.h"
-#include <string>
+
 
 UCLASS()
 class POSTGAME2_API AMainCharacter : public AActor
 {
 	GENERATED_BODY()
+
+    UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    class UStaticMeshComponent* MainCharacter;
+
+    UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    class UCameraComponent* CameraComponent;
+
+    UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    class USpringArmComponent* CameraBoom;
+
 public:	
 	// Sets default values for this actor's properties
 	AMainCharacter();
 
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        float MoveSpeed;
+
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        double Scarespeed;
+
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        float health;
+
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        float exp;
+
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        float damage;
+
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        float defence;
+
+    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+        float scared;
+
+
 	UPROPERTY(VisibleAnywhere, Category= "Percy")
 		UStaticMeshComponent* StaticMesh;
 	
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+	UFUNCTION(Category = Gameplay, BlueprintCallable)
         float getHealth() {
         return health;
     }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
     float getExp() {
         return exp;
     }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
     float getDamage() {
         return damage;
     }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
     float getDefence() {
         return defence;
     }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setHealth(float hp) {
-        hp = health;
+
+    UFUNCTION(Category = Gameplay, BlueprintCallable)
+    float getScared() {
+        return scared;
     }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setExp(float EXP) {
-        EXP = exp;
+
+    void fearLevel(float scare) {
+            scared = scare;
+            bool hit;
+            while(hit == true) {
+                scare = scare + 1;
+                while (scare <= 1 && scare == 100.0) {
+                   MoveSpeed = scare * MoveSpeed * Scarespeed;
+                }
+            }
     }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    std::string getWeapon() {
-        return _weapon;
-    }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setWeapon(std::string weapon, float dmg) {
-        _weapon = weapon;
-        dmg = damage;
-    }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setDefence(float df) {
-        df = defence;
-    }
-    UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-    void setPlayer(float hp, float dmg, float df, float EXP) {
-        hp = health;
-        dmg = damage;
-        df = defence;
-        EXP = exp;
+
+    void setPlayer() {
+        health;
+        damage;
+        defence;
+        exp;
+        scared;
     }
 
     UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
@@ -72,16 +104,15 @@ public:
     UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
         class USoundBase* Hitting;
 
+    virtual void Tick(float DeltaSeconds) override;
+
+
 	static const FName MoveForwardBinding;
 	static const FName MoveSidewaysBinding;
 
 private:
 	uint32 bCanToss : 1;
 	FTimerHandle TimerHandle_TossTimerExpired;
-    float health;
-    float exp;
-    float damage;
-    float defence;
     std::string _weapon;
 
 
@@ -92,5 +123,16 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+    //FORCEINLINE class UInputComponent* SetupPlayerInputComponent() const { return PlayerInputComponent; }
+
+    void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
+
+    /** Returns ShipMeshComponent subobject **/
+    FORCEINLINE class UStaticMeshComponent* GetMainCharacterMeshComponent() const { return MainCharacter; }
+    /** Returns CameraComponent subobject **/
+    FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
+    /** Returns CameraBoom subobject **/
+    FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 };
